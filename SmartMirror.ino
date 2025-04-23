@@ -10,16 +10,12 @@ const int echoPin = 10;
 
 float duration, distance;
 
-// Uncomment whatever type you're using!
-#define DHTTYPE DHT11   // DHT 11
-
+#define DHTTYPE DHT11   
 
 DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
-  Serial.begin(9600);
-  //Serial.println(F("DHTxx test!"));
-
+  
   dht.begin();
 
   pinMode(trigPin, OUTPUT);  
@@ -29,14 +25,12 @@ void setup() {
   lcd.init();
   lcd.backlight();
   lcd.setCursor(0, 0);
-  lcd.print("Temperatura: ");
+  lcd.print("Temperature: ");
   lcd.setCursor(0, 1);
   lcd.print("Humidity: ");
 }
 
 void loop() {
-
-  delay(1000);
   
   digitalWrite(trigPin, LOW);  
 	delayMicroseconds(2);  
@@ -46,29 +40,25 @@ void loop() {
   duration = pulseIn(echoPin, HIGH); 
   distance = (duration*.0343)/2; 
   
-  if(distance < 30) 
+  if(distance < 70) 
     {
       digitalWrite(time, HIGH);
-      delay(30000);
     }
      else digitalWrite(time, LOW);
 
-  
   float h = dht.readHumidity();
-  // Read temperature as Celsius (the default)
+
   float t = dht.readTemperature();
-  // Read temperature as Fahrenheit (isFahrenheit = true)
+ 
   float f = dht.readTemperature(true);
 
-  // Check if any reads failed 
   if (isnan(h) || isnan(t) || isnan(f)) {
     Serial.println(F("Failed to read from DHT sensor!"));
     return;
   }
 
-  // Compute heat index in Fahrenheit (the default)
   float hif = dht.computeHeatIndex(f, h);
-  // Compute heat index in Celsius (isFahreheit = false)
+ 
   float hic = dht.computeHeatIndex(t, h, false);
   
   lcd.setCursor(12, 0);  
@@ -77,5 +67,5 @@ void loop() {
   lcd.print(h);
   lcd.setCursor(15, 1);  
   lcd.print('%');
-  
+  delay(5000);
 }
